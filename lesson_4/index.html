@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lesson 4</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  </head>
+  <body>
+
+    <div id="app" class="container">
+      <br/>
+      <h1>{{ major.name }} - Warchief of the Horde!</h1>
+      <br/>
+      <ul class="list-group">
+        <li class="list-group-item"
+            v-for="(item, index) in candidats"
+              :key="index"
+        >
+          {{ ++index }}: {{ item.name }} ({{ item.race }}) => Votes: {{ item.votes }}
+          <button class="float-right btn btn-primary" @click="vote(item)">Vote</button>
+        </li>
+      </ul>
+      <br/>
+      <div>
+        <button class="btn btn-danger" @click="reset()">Reset</button>
+      </div>
+    </div>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.min.js"></script>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        candidats: [
+          {
+            name: 'Sylvana',
+            race: 'Undead',
+            votes: 0
+          },
+          {
+            name: 'Thrall',
+            race: 'Ork',
+            votes: 0
+          },
+          {
+            name: 'Khern',
+            race: 'Tauren',
+            votes: 0
+          },
+          {
+            name: 'Bwonsamdi',
+            race: 'Troll-spirit',
+            votes: 0
+          }
+        ]
+      },
+      computed: {
+        major () {
+          this.candidats.sort( (a, b) => {
+            return b.votes - a.votes
+          })
+
+          return this.candidats[0]
+        }
+      },
+      methods: {
+        vote (item) {
+          ++item.votes
+        },
+        reset () {
+          this.candidats = this.candidats.map( (item) => {
+            item.votes = 0;
+            return item
+          })
+        }
+      }
+    })
+  </script>
+  </body>
+</html>
