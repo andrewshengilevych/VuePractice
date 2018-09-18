@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lesson 6</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  </head>
+  <body>
+
+    <div id="app" class="container">
+      <br/>
+      <h1>WoW Places</h1>
+      <br/>
+
+      <ul class="list-group">
+        <li class="list-group-item"
+            v-for="(item, index) in places"
+            :key="index"
+        >
+          <place :name="item.name" :visited="item.visited"></place>
+        </li>
+      </ul>
+    </div>
+
+    <template id="place-template">
+      <div>
+        {{ name }} was visited {{ visited }} times
+        <i v-show="visited > 0">Visited</i>
+        <button v-show="visited <= 2" type="button" name="button" class="btn btn-primary float-right" @click="visit()">Visit</button>
+      </div>
+    </template>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.min.js"></script>
+
+  <script>
+
+  Vue.component('place', {
+    template: '#place-template',
+    props: ['name', 'visited'],
+    methods: {
+      visit () {
+        this.visited += 1
+      }
+    }
+  })
+
+    new Vue({
+      el: '#app',
+      data: {
+        places: [
+          {
+            name: 'Stormwind',
+            visited: 0
+          },
+          {
+            name: 'Orgrimmar',
+            visited: 0
+          },
+          {
+            name: 'Dalaran',
+            visited: 0
+          },
+          {
+            name: 'Exodar',
+            visited: 0
+          }
+        ],
+        sortOrder: 1,
+        limit: null
+      },
+      methods: {
+
+      }
+    })
+  </script>
+  </body>
+</html>

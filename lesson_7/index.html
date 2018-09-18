@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lesson 7</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  </head>
+  <body>
+
+    <div id="app" class="container">
+      <br/>
+      <h1>Chariots Shop</h1>
+      <br/>
+
+      <ul class="list-group">
+        <li class="list-group-item"
+            v-for="(item, index) in chariots"
+            :key="index"
+        >
+          <chariot :chariot="item" :current="currentChariot"></chariot>
+        </li>
+      </ul>
+    </div>
+
+    <template id="chariot-template">
+      <div>
+        Chariot '{{ chariot.name }}' has <b>{{ chariot.horses }}</b> horses
+        <button type="button" name="button" class="btn btn-primary float-right" :disabled="this.current.horses == chariot.horses" @click="setCurrentChariot()">
+            <span v-if="!horseCount">
+              Choose a chariot
+            </span>
+            <span v-if="horseCount < chariot.horses">
+              Reject horses
+            </span>
+            <span v-if="horseCount > chariot.horses">
+              Add horses
+            </span>
+            <span v-if="this.current.horses == chariot.horses">
+              Let's go
+            </span>
+        </button>
+      </div>
+    </template>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.min.js"></script>
+
+  <script>
+
+  var $bus = new Vue()
+
+  Vue.component('chariot', {
+    template: '#chariot-template',
+    props: ['chariot', 'current'],
+    data () {
+      return {
+        disabled: false
+      }
+    },
+    computed: {
+      horseCount () {
+        return this.current.horses
+      }
+    },
+    methods: {
+      setCurrentChariot () {
+        $bus.$emit('update', this.chariot)
+      }
+    }
+  })
+
+    new Vue({
+      el: '#app',
+      data: {
+        chariots: [
+          {
+            name: 'Olimp',
+            horses: 3
+          },
+          {
+            name: 'Saggita',
+            horses: 4
+          },
+          {
+            name: 'Ikar',
+            horses: 1
+          },
+          {
+            name: 'Abrakas',
+            horses: 2
+          }
+        ],
+        currentChariot: {
+          name: '',
+          hourses: null
+        }
+      },
+      mounted () {
+        $bus.$on('update', (chariot) => {
+          this.currentChariot = chariot
+        })
+      },
+      methods: {
+
+      }
+    })
+  </script>
+  </body>
+</html>

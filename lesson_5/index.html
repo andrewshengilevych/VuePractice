@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Lesson 4</title>
+    <title>Lesson 5</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
@@ -13,20 +13,23 @@
 
     <div id="app" class="container">
       <br/>
-      <h1>{{ major.name }} - Warchief of the Horde!</h1>
+      <h1>WoW Characters</h1>
       <br/>
+      <div class="form-group">
+        <span class="input-group-addon">Age filter</span>
+        <input type="text" class="form-control" v-model.number="limit">
+      </div>
       <ul class="list-group">
         <li class="list-group-item"
-            v-for="(item, index) in candidats"
+            v-for="(item, index) in sortedCharacters"
               :key="index"
         >
-          {{ ++index }}: {{ item.name }} ({{ item.race }}) => Votes: {{ item.votes }}
-          <button class="float-right btn btn-primary" @click="vote(item)">Vote</button>
+          {{ ++index }}: {{ item.name }} ({{ item.race }}) => Age: {{ item.age }}
         </li>
       </ul>
       <br/>
       <div>
-        <button class="btn btn-danger" @click="reset()">Reset</button>
+        <button class="btn btn-danger" @click="reverse()">Reverse</button>
       </div>
     </div>
 
@@ -37,47 +40,50 @@
     new Vue({
       el: '#app',
       data: {
-        candidats: [
+        characters: [
           {
             name: 'Sylvana',
             race: 'Undead',
-            votes: 0
+            age: 150
           },
           {
             name: 'Thrall',
             race: 'Ork',
-            votes: 0
+            age: 68
           },
           {
             name: 'Khern',
             race: 'Tauren',
-            votes: 0
+            age: 80
           },
           {
             name: 'Bwonsamdi',
             race: 'Loa',
-            votes: 0
+            age: 1000
+          },
+          {
+            name: 'Anduin',
+            race: 'Loa',
+            age: 21
           }
-        ]
+        ],
+        sortOrder: 1,
+        limit: null
       },
       computed: {
-        major () {
-          this.candidats.sort( (a, b) => {
-            return b.votes - a.votes
+        sortedCharacters () {
+          let filteredItem = this.characters.filter( (item) => {
+            return item.age > this.limit
           })
+          return filteredItem.sort ( (a, b) => {
+            return (a.age - b.age) * this.sortOrder
+          } )
 
-          return this.candidats[0]
         }
       },
       methods: {
-        vote (item) {
-          ++item.votes
-        },
-        reset () {
-          this.candidats = this.candidats.map( (item) => {
-            item.votes = 0;
-            return item
-          })
+        reverse () {
+          this.sortOrder = this.sortOrder*-1
         }
       }
     })
