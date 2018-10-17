@@ -1,6 +1,6 @@
 Vue.component('film', {
   template: '#film-template',
-  props: ['film', 'index'],
+  props: ['film', 'index', 'films'],
   methods: {
     toggleEditMode () {
       this.film.edit = !this.film.edit
@@ -9,6 +9,26 @@ Vue.component('film', {
       axios.patch(`/api/movies/${this.film.id}`, this.film)
       .then((response) => {
         this.film.edit = false
+      })
+      .catch(function (error) {
+        console.error(error);
+      })
+    },
+    create () {
+      axios.post(`/api/movies/`, this.film)
+      .then((response) => {
+        this.film.edit = false
+        this.film.id = response.data.id
+      })
+      .catch(function (error) {
+        console.error(error);
+      })
+    },
+    remove () {
+      axios.delete(`/api/movies/${this.film.id}`)
+      .then((response) => {
+        let index = this.films.indexOf(this.film)
+        this.films.splice(index, 1)
       })
       .catch(function (error) {
         console.error(error);
@@ -38,6 +58,15 @@ new Vue({
         .catch(function (error) {
           console.error(error);
         })
+    },
+    addItem () {
+      let newItem = {
+        id: null,
+        title: '',
+        director: '',
+        edit: true
+      }
+      this.films.push(newItem)
     }
   }
 })

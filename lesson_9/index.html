@@ -31,9 +31,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(film, index) in films" :key="film.name" is="film" :film="film" :index="index"></tr>
+          <tr v-for="(film, index) in films" :key="film.name" is="film" :film="film" :index="index" :films="films"></tr>
         </tbody>
       </table>
+      <br/>
+      <button type="button" class="btn btn-success" @click="addItem()">Add film</button>
 
     </div>
 
@@ -54,12 +56,15 @@
           <button v-if="!film.edit" type="button" name="button" @click="toggleEditMode()" class="btn btn-primary">
             <i class="fas fa-pen-nib"></i>
           </button>
-          <button v-if="film.edit" type="button" name="button" @click="update()" class="btn btn-primary">
+          <button v-if="film.edit && film.id" type="button" name="button" @click="update()" class="btn btn-primary">
+            <i class="fas fa-save"></i>
+          </button>
+          <button v-if="!film.id && film.edit" type="button" name="button" @click="create()" class="btn btn-primary">
             <i class="fas fa-save"></i>
           </button>
         </td>
         <td>
-          <button v-if="!film.edit" type="button" name="button" class="btn btn-danger">
+          <button v-if="!film.edit" type="button" name="button" class="btn btn-danger" @click="remove()">
             <i class="fas fa-trash"></i>
           </button>
           <button v-if="film.edit" type="button" name="button" @click="toggleEditMode()" class="btn btn-dark">
